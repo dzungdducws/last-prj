@@ -3,16 +3,15 @@
 import { useState, useEffect } from "react";
 import api from "../../config/axiosConfig";
 import { useRouter } from "next/navigation";
-  
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); // Trạng thái loading
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    // Kiểm tra nếu đang ở client, vì localStorage chỉ có trên client
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
 
@@ -25,22 +24,28 @@ export default function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true); // Đang xử lý
+    setLoading(true);
     try {
       const response = await api.post("/users/login", {
         email,
         password,
       });
-      console.log(response);
       if (typeof window !== "undefined") {
         localStorage.setItem("token", response.data.access_token);
       }
 
       router.replace("/dashboard");
+      if (typeof window !== "undefined") {
+        window.location.reload();
+      }
     } catch (err) {
-      setError("Đăng nhập thất bại. Kiểm tra lại thông tin.");
+      if (err.response && err.response.status === 401) {
+        setError("Email hoặc mật khẩu không đúng.");
+      } else {
+        setError("Đăng nhập thất bại. Kiểm tra lại thông tin.");
+      }
     } finally {
-      setLoading(false); // Kết thúc xử lý
+      setLoading(false);
     }
   };
 
@@ -56,7 +61,6 @@ export default function LoginPage() {
             Đăng nhập
           </h1>
           {error && <p className="text-red-500">{error}</p>}{" "}
-          {/* Thông báo lỗi */}
           <form onSubmit={handleLogin} className="space-y-4 md:space-y-6">
             <div>
               <label
@@ -66,6 +70,7 @@ export default function LoginPage() {
                 Email
               </label>
               <input
+                autoFocus
                 type="text"
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -95,7 +100,7 @@ export default function LoginPage() {
             <button
               type="submit"
               className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg"
-              disabled={loading} // Vô hiệu hóa nút khi đang xử lý
+              disabled={loading}
             >
               {loading ? "Đang đăng nhập..." : "Đăng nhập"}
             </button>
