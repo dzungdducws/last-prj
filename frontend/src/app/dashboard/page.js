@@ -12,9 +12,6 @@ export default function DashboardPage() {
   }, [router]);
 
   return (
-    <div className="p-4 m-64">
-      <h1 className="text-2xl font-bold">Room Detail</h1>
-      <p>Room ID:</p>
-    </div>
+    <></>
   );
 }

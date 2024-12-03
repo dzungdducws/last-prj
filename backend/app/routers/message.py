@@ -7,12 +7,19 @@ from ..utils import get_db
 router = APIRouter()
 
 @router.get("/view_message_by_room_id")
-def view_message(room_id: int, db: Session = Depends(get_db)):
+def view_message(
+    room_id: int, 
+    db: Session = Depends(get_db),
+    limit: int = 10,  
+    offset: int = 0  
+):
     messages = (
         db.query(Message, User.user_id, User.username)
         .join(User, User.user_id == Message.user_id)
         .filter(Message.room_id == room_id)
         .order_by(desc(Message.created_at))
+        .limit(limit) 
+        .offset(offset)  
         .all()
     )
     
@@ -21,14 +28,20 @@ def view_message(room_id: int, db: Session = Depends(get_db)):
     
     results = [
         {
+            "message_id": message.message_id,
             "user_id": user_id,
             "user_name": username,
-            "message_detail": message.message_detail,  # Ensuring the field name matches your schema
+            "message_detail": message.message_detail,  
             "created_at": message.created_at,
         }
         for message, user_id, username in messages
     ]
-    return results
+    return {
+        "total_messages": db.query(Message).filter(Message.room_id == room_id).count(), 
+        "messages": results,
+        "limit": limit,
+        "offset": offset
+    }
 
 @router.post("/send_message")
 def send_message(room_id: int, user_id: int, message_detail: str, db: Session = Depends(get_db)):

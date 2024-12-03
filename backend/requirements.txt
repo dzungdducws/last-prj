@@ -3,6 +3,7 @@ uvicorn[standard]
 jwt
 sqlalchemy
 pymysql
+starlette
 pydantic 
 passlib[bcrypt]
 pydantic[email]

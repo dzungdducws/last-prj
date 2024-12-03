@@ -1,48 +1,67 @@
 "use client";
+// components/Chat.js
+import { useEffect, useState } from "react";
 
-import { useState, useEffect } from 'react';
-
-const ChatRoom = () => {
+export default function Chat() {
+  const [clientId, setClientId] = useState(null);
+  const [messageText, setMessageText] = useState("");
   const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState('');
-  const [socket, setSocket] = useState(null);
+  const [ws, setWs] = useState(null);
 
   useEffect(() => {
-    const ws = new WebSocket(`ws://localhost:7005/ws/${1}`);
-    ws.onmessage = (event) => {
-      const newMessage = event.data;
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    const client_id = Date.now(); // Generate a unique client ID
+    setClientId(client_id);
+
+    const websocket = new WebSocket(`ws://localhost:8082/ws/${client_id}`);
+
+    websocket.onmessage = (event) => {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: event.data, timestamp: new Date().toISOString() },
+      ]);
     };
-    setSocket(ws);
+
+    setWs(websocket);
 
     return () => {
-      ws.close();
+      websocket.close();
     };
   }, []);
 
-  const sendMessage = () => {
-    if (socket) {
-      socket.send(message);
-      setMessage('');
+  const sendMessage = (event) => {
+    event.preventDefault();
+    if (ws && messageText.trim()) {
+      ws.send(messageText);
+      setMessageText(""); // Clear input after sending
     }
   };
 
   return (
     <div>
-      <div>
-        {messages.map((msg, index) => (
-          <div key={index}>{msg}</div>
+      <h1>WebSocket Chat</h1>
+      <h2>
+        Your ID: <span>{clientId}</span>
+      </h2>
+
+      <form onSubmit={sendMessage}>
+        <input
+          type="text"
+          id="messageText"
+          value={messageText}
+          onChange={(e) => setMessageText(e.target.value)}
+          autoComplete="off"
+          placeholder="Type a message..."
+        />
+        <button type="submit">Send</button>
+      </form>
+
+      <ul id="messages">
+        {messages.map((message, index) => (
+          <li key={index}>
+            <strong>{message.timestamp}:</strong> {message.text}
+          </li>
         ))}
-      </div>
-      <input
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type your message..."
-      />
-      <button onClick={sendMessage}>Send</button>
+      </ul>
     </div>
   );
-};
-
-export default ChatRoom;
+}
