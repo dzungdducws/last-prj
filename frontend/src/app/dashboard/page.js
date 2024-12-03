@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import api from "../../config/axiosConfig";
-import SidebarWithContentSeparator from "@/component/SidebarWithContentSeparator";
+import Sidebar from "@/components/Sidebar";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -12,7 +12,6 @@ export default function DashboardPage() {
   const [error, setError] = useState(null); // To store error messages if any
 
   useEffect(() => {
-    console.log(router);
 
     if (typeof window !== "undefined") {
       const fetchUserData = async () => {
@@ -45,14 +44,11 @@ export default function DashboardPage() {
     }
   }, [router]);
 
-  const logout = useCallback(() => {
-    localStorage.removeItem("token");
-    router.replace("/login");
-  }, [router]);
+
 
   return (
     <>
-      <SidebarWithContentSeparator />
+      <Sidebar />
     </>
   );
 }

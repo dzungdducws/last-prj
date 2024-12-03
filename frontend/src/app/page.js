@@ -1,16 +1,19 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  return (
-    <div>
-      <div className="p-4">
-        {/* Title */}
-        <h1 className="text-3xl font-bold mb-4"></h1>
-        <p></p>
-      </div>
-    </div>
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      router.replace("/dashboard");
+      return;
+    }
+  }, [router]);
+
+  return <></>;
 
   // );
 }
