@@ -60,7 +60,7 @@ export default function Sidebar() {
       <div className="p-4 text-lg font-bold border-b border-gray-500">
         {username || "Loading..."}
       </div>
-      <nav className="flex-grow p-4">
+      <nav className="flex-grow p-4 h-[65%] overflow-y-auto scrollbar">
         <ul className="space-y-2">
           <RoomList rooms={rooms} />
         </ul>

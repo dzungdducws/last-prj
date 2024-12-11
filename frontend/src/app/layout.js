@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
     <html>
       <body className="flex">
         <Sidebar />
-        <main className="flex-grow p-4 bg-gray-100 h-screen overflow-scroll">{children}</main>
+        <main className="flex-grow p-4 bg-gray-100 h-screen overflow-y-scroll">{children}</main>
       </body>
     </html>
   );

@@ -24,14 +24,6 @@ app.add_middleware(
     allow_headers=["*"],  
 )
 
-class RequestLoggingMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        logger.info(f"Request: {request.method} {request.url}")
-        response = await call_next(request)
-        return response
-
-app.add_middleware(RequestLoggingMiddleware)
-
 app.include_router(user.router, prefix="/users", tags=["users"])
 app.include_router(message.router, prefix="/messages", tags=["messages"])
 app.include_router(room.router, prefix="/room", tags=["room"])
