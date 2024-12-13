@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from sqlalchemy import desc 
+from sqlalchemy import asc 
 from datetime import timedelta
 from ..schemas import UserResponse, UserLogin, UserRegister, UserBase
 from ..models import User, Role, Room, RoleSelect
@@ -55,11 +55,11 @@ def create_user(userRegister: UserRegister, db: Session = Depends(get_db)):
 @router.get("/view_room_by_id")
 def view_room(user_id: int, db: Session = Depends(get_db)):
     roles = (
-        db.query(Role, Room.room_name, RoleSelect.role_select_detail)
+        db.query(Role, Room.room_name, RoleSelect.role_select_id)
         .join(Room, Role.room_id == Room.room_id)
         .join(RoleSelect, RoleSelect.role_select_id == Role.role_detail)
         .filter(Role.user_id == user_id)
-        .order_by(desc(RoleSelect.role_select_detail))
+        .order_by(asc(RoleSelect.role_select_id))
         .all()
     )
     
@@ -70,8 +70,8 @@ def view_room(user_id: int, db: Session = Depends(get_db)):
         {
             "role": role, 
             "room_name": room_name,
-            "role_select_detail": role_select_detail,
+            "role_select_id": role_select_id,
         }
-        for role, room_name, role_select_detail in roles
+        for role, room_name, role_select_id in roles
     ]
     return results

@@ -1,5 +1,5 @@
 import "@/style/globals.css";
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/sidebar/Sidebar";
 export const metadata = {
   title: {
     template: "%s",
@@ -14,7 +14,9 @@ export default function RootLayout({ children }) {
     <html>
       <body className="flex">
         <Sidebar />
-        <main className="flex-grow p-4 bg-gray-100 h-screen overflow-y-scroll">{children}</main>
+        <main className="flex-grow bg-gray-100 h-screen overflow-y-hidden">
+          {children}
+        </main>
       </body>
     </html>
   );

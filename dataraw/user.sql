@@ -1,0 +1,10 @@
+insert into user (username, email, password_hash) values ('dzungdducws', 'dzungdducws@gmail.com', '$2b$12$RNQRDtsJA/iVD/i3mbBW7O1/s2Lz.x7nP/DayrFUYQDpkDCA78Bby');
+insert into user (username, email, password_hash) values ('dzung', 'dzung@gmail.com', '$2b$12$RNQRDtsJA/iVD/i3mbBW7O1/s2Lz.x7nP/DayrFUYQDpkDCA78Bby');
+insert into user (username, email, password_hash) values ('Trista Gustus', 'tgustus2@tinypic.com', '$2b$12$RNQRDtsJA/iVD/i3mbBW7O1/s2Lz.x7nP/DayrFUYQDpkDCA78Bby');
+insert into user (username, email, password_hash) values ('Margy Bridgeman', 'mbridgeman3@yandex.ru', '$2b$12$RNQRDtsJA/iVD/i3mbBW7O1/s2Lz.x7nP/DayrFUYQDpkDCA78Bby');
+insert into user (username, email, password_hash) values ('Amelina Grute', 'agrute4@newyorker.com', '$2b$12$RNQRDtsJA/iVD/i3mbBW7O1/s2Lz.x7nP/DayrFUYQDpkDCA78Bby');
+insert into user (username, email, password_hash) values ('Fields Penticost', 'fpenticost5@privacy.gov.au', '$2b$12$RNQRDtsJA/iVD/i3mbBW7O1/s2Lz.x7nP/DayrFUYQDpkDCA78Bby');
+insert into user (username, email, password_hash) values ('Obadias Heindrick', 'oheindrick6@nature.com', '$2b$12$RNQRDtsJA/iVD/i3mbBW7O1/s2Lz.x7nP/DayrFUYQDpkDCA78Bby');
+insert into user (username, email, password_hash) values ('Aldrich Palombi', 'apalombi7@google.pl', '$2b$12$RNQRDtsJA/iVD/i3mbBW7O1/s2Lz.x7nP/DayrFUYQDpkDCA78Bby');
+insert into user (username, email, password_hash) values ('Rriocard Vasyunin', 'rvasyunin8@newyorker.com', '$2b$12$RNQRDtsJA/iVD/i3mbBW7O1/s2Lz.x7nP/DayrFUYQDpkDCA78Bby');
+insert into user (username, email, password_hash) values ('Orv Staneland', 'ostaneland9@freewebs.com', '$2b$12$RNQRDtsJA/iVD/i3mbBW7O1/s2Lz.x7nP/DayrFUYQDpkDCA78Bby');

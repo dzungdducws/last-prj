@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // Dùng useRouter từ Next.js
 import api from "@/config/axiosConfig"; // Giả sử bạn có axios config sẵn
-import RoomList from "@/components/RoomList"; // Phần hiển thị danh sách phòng
+import RoomList from "@/components/sidebar/RoomList"; // Phần hiển thị danh sách phòng
 
 export default function Sidebar() {
   const [username, setUsername] = useState("");
@@ -22,14 +22,12 @@ export default function Sidebar() {
 
     const fetchUserData = async () => {
       try {
-        // Lấy thông tin người dùng từ API
         const response = await api.get("/users/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
         setUsername(response.data.username);
 
-        // Lấy danh sách phòng người dùng
         const res = await api.get(
           `/users/view_room_by_id?user_id=${response.data.user_id}`
         );
@@ -50,10 +48,10 @@ export default function Sidebar() {
     router.replace("/login");
   };
 
-  if (!isLogin) return null; // Nếu chưa đăng nhập, ẩn Sidebar
+  if (!isLogin) return null;
 
   return (
-    <div className="h-screen w-64 bg-gray-800 text-white flex flex-col">
+    <div className="h-screen min-w-64 w-64 bg-gray-800 text-white flex flex-col">
       <div className="p-4 text-lg font-bold border-b border-gray-500">
         <a href="/dashboard">Trang chủ</a>
       </div>
