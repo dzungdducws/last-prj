@@ -10,11 +10,12 @@
 
   .scrollbar::-webkit-scrollbar-track {
     border-radius: 100vh;
-    background: rgb(107 114 128);
+    background: rgb(209 213 219);
+
   }
 
   .scrollbar::-webkit-scrollbar-thumb {
-    background: rgb(209 213 219);
+    background: rgb(107 114 128);
     border-radius: 100vh;
   }
 

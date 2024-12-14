@@ -32,7 +32,7 @@ class RoleSelect(Base):
     __tablename__ = "roleselect"
 
     role_select_id = Column(Integer, primary_key=True, index=True)
-    role_select_detail = Column(Enum("Admin", "Member", "Guest", name="role_type"), nullable=False)
+    role_select_detail = Column(Enum("Admin", "Member", "Tester", name="role_type"), nullable=False)
     created_at = Column(TIMESTAMP, server_default=func.current_timestamp())
 
 class Role(Base):
@@ -84,6 +84,14 @@ class Task(Base):
 
     sprint = relationship("Sprint", back_populates="tasks")
     commenttasks = relationship("CommentTask", back_populates="task")
+
+class TaskPerform(Base):
+    __tablename__ = "taskperform"
+
+    task_perform_id = Column(Integer, primary_key=True, index=True)
+    task_id = Column(Integer, ForeignKey("task.task_id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
+    created_at = Column(TIMESTAMP, server_default=func.current_timestamp())
 
 class CommentTask(Base):    
     __tablename__ = "commenttask"

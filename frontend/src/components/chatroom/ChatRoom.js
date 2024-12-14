@@ -72,7 +72,7 @@ export default function ChatRoom({ params }) {
     fetchUserId();
 
     const websocket = new WebSocket(
-      `ws://localhost:8006/ws/chat_room/${room_id}`
+      `ws://localhost:8081/ws/chat_room/${room_id}`
     );
 
     websocket.onmessage = (event) => {

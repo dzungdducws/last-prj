@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Tạo instance Axios
 const api = axios.create({
-  baseURL: "http://localhost:8006",
+  baseURL: "http://localhost:8081",
 });
 
 // Thêm interceptor để thêm token vào header

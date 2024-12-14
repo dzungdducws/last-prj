@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from ..models import Room
+from sqlalchemy import desc 
+from ..models import Room, Task, Sprint
 from ..schemas import RoomBase
 from ..utils import get_db
 
@@ -13,3 +14,17 @@ def create_room(roomBase: RoomBase, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_room)
     return {"room_id": new_room.room_id, "room_name": new_room.room_name}
+
+
+
+@router.get("/view_sprint_by_room")
+def view_sprint(room_id: int, db: Session = Depends(get_db)):
+    res = db.query(Sprint).filter(Sprint.room_id == room_id).order_by(desc(Sprint.created_at), desc(Sprint.sprint_name)).all()
+    return res
+
+@router.get("/view_task_by_sprint")
+def view_task(sprint_id: int, db: Session = Depends(get_db)):
+    res = db.query(Task).filter(Task.sprint_id == sprint_id).all()
+    
+    return res
+

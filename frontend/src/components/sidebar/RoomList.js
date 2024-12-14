@@ -3,7 +3,6 @@ import Link from "next/link";
 
 function RoomList({ rooms }) {
   const displayedLabels = new Set(); // Bộ theo dõi trạng thái
-  console.log(rooms);
   const renderTitle = (type) => {
     switch (type) {
       case 1:
@@ -11,7 +10,7 @@ function RoomList({ rooms }) {
       case 2:
         return "Member";
       case 3:
-        return "Guest";
+        return "Tester";
       default:
         return "<DefaultComponent />";
     }

@@ -1,6 +1,6 @@
 @echo off
 
-wt -w 0 nt -d "./backend" uvicorn app.main:app --port 8006 --reload
+wt -w 0 nt -d "./backend" uvicorn app.main:app --port 8081 --reload
 
 timeout /t 3
 
