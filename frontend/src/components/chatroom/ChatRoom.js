@@ -2,11 +2,11 @@
 
 import api from "@/config/axiosConfig";
 import React, { useEffect, useState } from "react";
+import { useUser } from "@/context/UserContext";
 
 export default function ChatRoom({ params }) {
   const room_id = params.room_id;
-  const [userId, setUserId] = useState(null);
-  const [username, setUsername] = useState("");
+  const { username, userId } = useUser();
 
   const [messages, setMessages] = useState([]);
   const [page, setPage] = useState(0);
@@ -29,10 +29,12 @@ export default function ChatRoom({ params }) {
       );
 
       const newMessages = res.data.messages.reverse();
+      console.log(newMessages);
+      
       setMessages((prevMessages) => {
         const uniqueMessages = [];
         const messageIds = new Set(prevMessages.map((msg) => msg.message_id));
-
+        
         newMessages.forEach((msg) => {
           if (!messageIds.has(msg.message_id)) {
             uniqueMessages.push(msg);
@@ -56,29 +58,17 @@ export default function ChatRoom({ params }) {
   };
 
   useEffect(() => {
-    const fetchUserId = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await api.get("/users/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUserId(response.data.user_id);
-        setUsername(response.data.username);
-      } catch (error) {
-        console.error("Error fetching user ID: ", error);
-      }
-    };
-
-    fetchUserId();
-
     const websocket = new WebSocket(
-      `ws://localhost:8081/ws/chat_room/${room_id}`
+      `ws://localhost:8083/ws/chat_room/${room_id}`
     );
 
     websocket.onmessage = (event) => {
+      console.log(123);
+      
       const data = JSON.parse(event.data);
 
       setMessages((prevMessages) => [...prevMessages, data]);
+      console.log(messages);
     };
 
     setWs(websocket);
@@ -96,6 +86,8 @@ export default function ChatRoom({ params }) {
         user_id: userId,
         username: username,
       });
+      console.log(message);
+
       ws.send(message);
       setMessageText("");
     }
@@ -152,13 +144,11 @@ export default function ChatRoom({ params }) {
             >
               <div className="max-w-[75%]">
                 <p className="text-sm text-gray-600">
-                  {message.user_name} vào lúc {message.created_at}:
+                  {message.username} vào lúc {message.created_at}:
                 </p>
                 <button
                   className={`w-full py-2 px-4 text-left rounded-lg ${
-                    isUserMessage
-                      ? "bg-blue-100"
-                      : "bg-blue-600 text-white"
+                    isUserMessage ? "bg-blue-100" : "bg-blue-600 text-white"
                   }`}
                 >
                   {message.message_detail}

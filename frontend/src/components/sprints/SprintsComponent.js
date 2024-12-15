@@ -30,10 +30,7 @@ export default function SprintsComponent({ params }) {
   };
 
   const handleMenuClick = (e) => {
-    console.log(items);
-
     const selectedSprint = items.find((item) => item.key == e.key);
-    console.log(selectedSprint);
 
     if (selectedSprint) {
       setSprintName(selectedSprint.name);

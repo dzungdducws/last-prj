@@ -30,7 +30,7 @@ def view_message(
         {
             "message_id": message.message_id,
             "user_id": user_id,
-            "user_name": username,
+            "username": username,
             "message_detail": message.message_detail,  
             "created_at": message.created_at,
         }

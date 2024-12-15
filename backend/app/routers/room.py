@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import desc 
-from ..models import Room, Task, Sprint
+from ..models import Room, Task, Sprint, TaskPerform, User
 from ..schemas import RoomBase
 from ..utils import get_db
 
@@ -24,7 +24,19 @@ def view_sprint(room_id: int, db: Session = Depends(get_db)):
 
 @router.get("/view_task_by_sprint")
 def view_task(sprint_id: int, db: Session = Depends(get_db)):
-    res = db.query(Task).filter(Task.sprint_id == sprint_id).all()
-    
-    return res
+    res = (
+        db.query(Task, User.username)
+        .join(TaskPerform, TaskPerform.task_id == Task.task_id)
+        .join(User, User.user_id == TaskPerform.user_id)
+        .filter(Task.sprint_id == sprint_id)
+        .all()
+    )
+    result = [
+        {
+            "task": task.__dict__,
+            "username": username,
+        }
+        for task, username in res
+    ]
+    return result
 

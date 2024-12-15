@@ -1,47 +1,44 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // Dùng useRouter từ Next.js
-import api from "@/config/axiosConfig"; // Giả sử bạn có axios config sẵn
-import RoomList from "@/components/sidebar/RoomList"; // Phần hiển thị danh sách phòng
+import { useRouter } from "next/navigation";
+import api from "@/config/axiosConfig";
+import RoomList from "@/components/sidebar/RoomList";
+import { useUser } from "@/context/UserContext";
 
 export default function Sidebar() {
-  const [username, setUsername] = useState("");
+  const { username, userId } = useUser();
+
   const [rooms, setRooms] = useState([]);
   const [isLogin, setIsLogin] = useState(true);
-  const router = useRouter(); // Lấy router để theo dõi sự thay đổi đường dẫn
+  const router = useRouter();
 
-  // Lắng nghe sự thay đổi router và cập nhật Sidebar khi cần
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       setIsLogin(false);
       router.replace("/login");
       return;
     }
+  }, []);
 
+  useEffect(() => {
     const fetchUserData = async () => {
-      try {
-        const response = await api.get("/users/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        setUsername(response.data.username);
-
-        const res = await api.get(
-          `/users/view_room_by_id?user_id=${response.data.user_id}`
-        );
-        setRooms(res.data);
-      } catch (error) {
-        console.error("Lỗi khi lấy thông tin người dùng hoặc phòng:", error);
-        localStorage.removeItem("token");
-        setIsLogin(false);
-        router.replace("/login");
+      if (userId) {
+        try {
+          const res = await api.get(`/users/view_room_by_id?user_id=${userId}`);
+          setRooms(res.data);
+        } catch (error) {
+          console.error("Lỗi khi lấy thông tin người dùng hoặc phòng:", error);
+          localStorage.removeItem("token");
+          setIsLogin(false);
+          router.replace("/login");
+        }
       }
     };
 
     fetchUserData();
-  }, []);
+  }, [userId]);
+
   const logout = () => {
     localStorage.removeItem("token");
     setIsLogin(false);

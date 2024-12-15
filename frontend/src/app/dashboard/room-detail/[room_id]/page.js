@@ -1,8 +1,9 @@
 "use client";
 
 import ChatRoom from "@/components/chatroom/ChatRoom";
-import SprintsComponent from "@/components/sprints/SprintsComponent"
+import SprintsComponent from "@/components/sprints/SprintsComponent";
 import React, { useEffect, useState } from "react";
+import { UserProvider } from "@/context/UserContext";
 
 export default function RoomDetailPage({ params }) {
   const [type, setType] = useState(1);
@@ -56,7 +57,7 @@ export default function RoomDetailPage({ params }) {
           </div>
         </div>
       </nav>
-      {renderComponent(type, params)}
+      <UserProvider>{renderComponent(type, params)}</UserProvider>
     </div>
   );
 }

@@ -16,29 +16,52 @@ export default function KanbanTable({ params, sprintId }) {
 
   useEffect(() => {
     const getTask = async () => {
-      console.log(sprintId);
-      
       const res = await api.get(
         `/room/view_task_by_sprint?sprint_id=${sprintId}`
       );
       const updatedColumns = columns.map((column) => {
         const filteredTasks = res.data.filter(
-          (e) => e.task_type === column.id - 1
+          (e) => e.task.task_type === column.id - 1
         );
-        return {
-          ...column,
-          tasks: filteredTasks,
-        };
+        return { ...column, tasks: filteredTasks };
       });
       setColumns(updatedColumns);
     };
     getTask();
   }, [sprintId]);
 
+  const updateTaskType = async (taskId, newTaskType) => {
+    const newColumns = [...columns];
+
+    for (let column of newColumns) {
+      const taskIndex = column.tasks.findIndex(
+        (task) => task.task.task_id === taskId
+      );
+      if (taskIndex !== -1) {
+        const [task] = column.tasks.splice(taskIndex, 1);
+        task.task.task_type = newTaskType;
+        const targetColumn = newColumns.find(
+          (col) => col.id === newTaskType + 1
+        );
+        if (targetColumn) {
+          targetColumn.tasks.push(task);
+        }
+        break;
+      }
+    }
+
+    setColumns(newColumns);
+  };
+
   return (
     <div className="flex space-x-4 overflow-y-auto p-4">
       {columns.map((column) => (
-        <Column key={column.id} title={column.title} tasks={column.tasks} />
+        <Column
+          key={column.id}
+          title={column.title}
+          tasks={column.tasks}
+          updateTaskType={updateTaskType}
+        />
       ))}
     </div>
   );

@@ -1,19 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import Sidebar from "@/components/sidebar/Sidebar";
+import { UserProvider } from "@/context/UserContext";
 
 export default function Home() {
-  const router = useRouter();
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      router.replace("/dashboard");
-      return;
-    }
-  }, [router]);
-
-  return <></>;
-
-  // );
+  return (
+    <>
+      <UserProvider>
+        <Sidebar />
+      </UserProvider>
+    </>
+  );
 }

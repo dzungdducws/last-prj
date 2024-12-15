@@ -3,7 +3,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi import Request
-from .routers import user, message, room, websocket
+from .routers import user, message, room, websocket, task
 from .database import create_database
 import logging
 
@@ -27,6 +27,7 @@ app.add_middleware(
 app.include_router(user.router, prefix="/users", tags=["users"])
 app.include_router(message.router, prefix="/messages", tags=["messages"])
 app.include_router(room.router, prefix="/room", tags=["room"])
+app.include_router(task.router, prefix="/task", tags=["task"])
 
 app.include_router(websocket.router, prefix="/ws", tags=["ws"])
 
