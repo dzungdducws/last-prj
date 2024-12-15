@@ -59,7 +59,7 @@ export default function ChatRoom({ params }) {
 
   useEffect(() => {
     const websocket = new WebSocket(
-      `ws://localhost:8083/ws/chat_room/${room_id}`
+      `ws://localhost:8080/ws/chat_room/${room_id}`
     );
 
     websocket.onmessage = (event) => {

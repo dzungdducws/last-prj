@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { UserProvider } from "@/context/UserContext";
 
 export default function RoomDetailPage({ params }) {
-  const [type, setType] = useState(1);
+  const [type, setType] = useState(0);
 
   const renderComponent = (type, params) => {
     switch (type) {

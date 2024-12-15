@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import desc 
-from ..models import Room, Task, Sprint, TaskPerform, User
-from ..schemas import RoomBase
+from ..models import Room, Task, Sprint, TaskPerform, User, Role
+from ..schemas import RoomBase, SprintBase
 from ..utils import get_db
 
 router = APIRouter()
@@ -15,12 +15,25 @@ def create_room(roomBase: RoomBase, db: Session = Depends(get_db)):
     db.refresh(new_room)
     return {"room_id": new_room.room_id, "room_name": new_room.room_name}
 
-
+@router.post("/create_sprint")
+def create_sprint(room_id: int, db: Session = Depends(get_db)):
+    lastest_sprint = db.query(Sprint).filter(Sprint.room_id == room_id).order_by(desc(Sprint.created_at), desc(Sprint.sprint_name)).all()
+    new_sprint = Sprint(room_id=room_id, sprint_name="Sprint no. " + str(len(lastest_sprint)+1))
+    db.add(new_sprint)
+    db.commit()
+    db.refresh(new_sprint)
+    return {"sprint_id": new_sprint.sprint_id,"room_id": new_sprint.room_id, "sprint_name": new_sprint.sprint_name}
 
 @router.get("/view_sprint_by_room")
 def view_sprint(room_id: int, db: Session = Depends(get_db)):
     res = db.query(Sprint).filter(Sprint.room_id == room_id).order_by(desc(Sprint.created_at), desc(Sprint.sprint_name)).all()
     return res
+
+@router.get("/view_role")
+def view_sprint(user_id: int,room_id:int, db: Session = Depends(get_db)):
+    res = db.query(Role).filter(Role.room_id == room_id,Role.user_id == user_id).first()
+    return res
+
 
 @router.get("/view_task_by_sprint")
 def view_task(sprint_id: int, db: Session = Depends(get_db)):

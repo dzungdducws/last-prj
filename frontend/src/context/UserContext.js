@@ -1,4 +1,3 @@
-// UserContext.js
 import React, { createContext, useContext, useState, useEffect } from "react";
 import api from "@/config/axiosConfig";
 
@@ -12,11 +11,13 @@ export function UserProvider({ children }) {
     const fetchUserId = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await api.get("/users/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUserId(response.data.user_id);
-        setUsername(response.data.username);
+        if (token) {
+          const response = await api.get("/users/me", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setUserId(response.data.user_id);
+          setUsername(response.data.username);
+        }
       } catch (error) {
         console.error("Error fetching user ID: ", error);
       }

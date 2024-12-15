@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 
 function RoomList({ rooms }) {
-  const displayedLabels = new Set(); // Bộ theo dõi trạng thái
+  const displayedLabels = new Set();
   const renderTitle = (type) => {
     switch (type) {
       case 1:

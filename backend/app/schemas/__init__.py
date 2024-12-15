@@ -3,3 +3,4 @@ from .room import RoomBase, RoomCreate, RoomResponse
 from .role import RoleBase, RoleCreate, RoleResponse
 from .message import MessageBase, MessageCreate, MessageResponse
 from .task import TaskBase
+from .sprint import SprintBase

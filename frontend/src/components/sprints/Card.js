@@ -13,7 +13,7 @@ export default function Card({ task, updateTaskType, doingBy }) {
   useEffect(() => {
     if (showPopup) {
       const websocket = new WebSocket(
-        `ws://localhost:8083/ws/cmt/${task.task_id}`
+        `ws://localhost:8080/ws/cmt/${task.task_id}`
       );
 
       websocket.onmessage = (event) => {

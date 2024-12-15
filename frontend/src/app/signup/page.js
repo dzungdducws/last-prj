@@ -48,7 +48,7 @@ export default function SignUpPage() {
         setSuccess("");
       }
     } catch (err) {
-      console.error(err); // Log the error for debugging
+      console.error(err); 
       setError("Đăng ký thất bại. Kiểm tra lại thông tin.");
       setSuccess("");
     }
