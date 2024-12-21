@@ -85,6 +85,10 @@ class Task(Base):
     sprint = relationship("Sprint", back_populates="tasks")
     commenttasks = relationship("CommentTask", back_populates="task")
 
+    def to_dict(self):
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+
+
 class TaskPerform(Base):
     __tablename__ = "taskperform"
 

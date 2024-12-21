@@ -13,7 +13,7 @@ export default function Card({ task, updateTaskType, doingBy }) {
   useEffect(() => {
     if (showPopup) {
       const websocket = new WebSocket(
-        `ws://localhost:8080/ws/cmt/${task.task_id}`
+        `ws://localhost:8001/ws/cmt/${task.task_id}`
       );
 
       websocket.onmessage = (event) => {
@@ -83,7 +83,10 @@ export default function Card({ task, updateTaskType, doingBy }) {
   const comeBack = async () => {
     if (task.task_type > 0) {
       const newTaskType = task.task_type - 1;
-      await api.post("/task/come_back", { task_id: task.task_id });
+      await api.post("/task/come_back", {
+        task_id: task.task_id,
+        user_id: userId,
+      });
       updateTaskType(task.task_id, newTaskType);
     }
   };
@@ -91,7 +94,10 @@ export default function Card({ task, updateTaskType, doingBy }) {
   const moveForward = async () => {
     if (task.task_type < detail.length - 1) {
       const newTaskType = task.task_type + 1;
-      await api.post("/task/move_forward", { task_id: task.task_id });
+      await api.post("/task/move_forward", {
+        task_id: task.task_id,
+        user_id: userId,
+      });
       updateTaskType(task.task_id, newTaskType);
     }
   };
@@ -105,15 +111,20 @@ export default function Card({ task, updateTaskType, doingBy }) {
         <h3 className="text-gray-900 font-semibold text-lg mb-2">
           {task.task_title}
         </h3>
-        <p className="text-gray-600 text-xs mb-1">
+        {/* <p className="text-gray-600 text-xs mb-1">
           <span className="font-medium text-xs">Hạn:</span>{" "}
           {formatDateTime(task.due_date)}
-        </p>
+        </p> */}
         <p className="text-gray-600 text-xs">
           <span className="font-medium text-xs">Ngày tạo:</span>{" "}
           {formatDateTime(task.created_at)}
         </p>
-        <p className="text-gray-600 text-xs">Thực hiện bởi: {doingBy}</p>
+        {doingBy && (
+          <p className="text-gray-600 text-xs">
+            <span className="font-medium text-xs">Thực hiện bởi: </span>{" "}
+            {doingBy}
+          </p>
+        )}
       </div>
 
       {showPopup && (
@@ -139,10 +150,10 @@ export default function Card({ task, updateTaskType, doingBy }) {
                     <span className="font-medium">Mô tả:</span>{" "}
                     {task.task_description}
                   </p>
-                  <p className="text-gray-600 mb-2">
+                  {/* <p className="text-gray-600 mb-2">
                     <span className="font-medium">Hạn:</span>{" "}
                     {formatDateTime(task.due_date)}
-                  </p>
+                  </p> */}
                   <p className="text-gray-600 mb-4">
                     <span className="font-medium">Ngày tạo:</span>{" "}
                     {formatDateTime(task.created_at)}

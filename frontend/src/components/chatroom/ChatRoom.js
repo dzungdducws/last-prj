@@ -29,7 +29,6 @@ export default function ChatRoom({ params }) {
       );
 
       const newMessages = res.data.messages.reverse();
-      console.log(newMessages);
       
       setMessages((prevMessages) => {
         const uniqueMessages = [];
@@ -59,16 +58,14 @@ export default function ChatRoom({ params }) {
 
   useEffect(() => {
     const websocket = new WebSocket(
-      `ws://localhost:8080/ws/chat_room/${room_id}`
+      `ws://localhost:8001/ws/chat_room/${room_id}`
     );
 
     websocket.onmessage = (event) => {
-      console.log(123);
       
       const data = JSON.parse(event.data);
 
       setMessages((prevMessages) => [...prevMessages, data]);
-      console.log(messages);
     };
 
     setWs(websocket);
@@ -86,7 +83,6 @@ export default function ChatRoom({ params }) {
         user_id: userId,
         username: username,
       });
-      console.log(message);
 
       ws.send(message);
       setMessageText("");

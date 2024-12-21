@@ -143,7 +143,12 @@ export default function SprintsComponent({ params }) {
         )}
       </div>
 
-      {sprintId && <KanbanBoard params={params} sprintId={sprintId} />}
+      {sprintId && (
+        <KanbanBoard
+          sprintId={sprintId}
+          roleDetail={roleDetail}
+        />
+      )}
     </>
   );
 }

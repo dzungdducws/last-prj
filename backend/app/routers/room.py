@@ -37,19 +37,28 @@ def view_sprint(user_id: int,room_id:int, db: Session = Depends(get_db)):
 
 @router.get("/view_task_by_sprint")
 def view_task(sprint_id: int, db: Session = Depends(get_db)):
-    res = (
-        db.query(Task, User.username)
+    # Truy vấn tất cả nhiệm vụ trong sprint
+    all_tasks = db.query(Task).filter(Task.sprint_id == sprint_id).all()
+
+    # Truy vấn nhiệm vụ có người thực hiện
+    assigned_tasks = (
+        db.query(Task.task_id, User.username)
         .join(TaskPerform, TaskPerform.task_id == Task.task_id)
         .join(User, User.user_id == TaskPerform.user_id)
         .filter(Task.sprint_id == sprint_id)
         .all()
     )
+
+    # Chuyển kết quả assigned_tasks thành dict để dễ tìm kiếm
+    assigned_dict = {task_id: username for task_id, username in assigned_tasks}
+
+    # Kết hợp dữ liệu
     result = [
         {
-            "task": task.__dict__,
-            "username": username,
+            "task": task.to_dict(),  # Sử dụng phương thức `to_dict` từ model Task
+            "username": assigned_dict.get(task.task_id, ""),  # Lấy username nếu có, nếu không để trống
         }
-        for task, username in res
+        for task in all_tasks
     ]
-    return result
 
+    return result

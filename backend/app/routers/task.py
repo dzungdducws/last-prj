@@ -1,11 +1,19 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import desc 
-from ..models import Room, Task, Sprint, CommentTask, User
-from ..schemas import TaskBase
+from ..models import Room, Task, Sprint, CommentTask, User, TaskPerform
+from ..schemas import TaskBase, TaskCreate
 from ..utils import get_db
 
 router = APIRouter()
+
+@router.post("/create_task")
+def create_task(taskCreate: TaskCreate, db: Session = Depends(get_db)):
+    task = Task(sprint_id = taskCreate.sprint_id, task_title = taskCreate.task_title, task_description = taskCreate.task_description, task_type = 0)
+    db.add(task)
+    db.commit()
+    db.refresh(task)
+    return task
 
 @router.post("/change_to_backlog")
 def change_to_backlog(taskBase: TaskBase, db: Session = Depends(get_db)):
@@ -54,15 +62,24 @@ def change_to_done(taskBase: TaskBase, db: Session = Depends(get_db)):
 def come_back(taskBase: TaskBase, db: Session = Depends(get_db)):
     res = db.query(Task).filter(Task.task_id == taskBase.task_id).first()
     res.task_type = res.task_type - 1
+    if res.task_type == 0:
+        delRes = db.query(TaskPerform).filter(TaskPerform.task_id == taskBase.task_id).first()
+        db.delete(delRes)
     db.commit()
-    return 200
+    return res
 
 @router.post("/move_forward")
 def move_forward(taskBase: TaskBase, db: Session = Depends(get_db)):
     res = db.query(Task).filter(Task.task_id == taskBase.task_id).first()
+    if res.task_type == 0:
+        addRes = TaskPerform(task_id = taskBase.task_id, user_id = taskBase.user_id)
+        db.add(addRes)
+        db.commit()
+        db.refresh(addRes)
+
     res.task_type = res.task_type + 1
     db.commit()
-    return 200
+    return res
 
 @router.get("/comments")
 def comments(task_id: int, db: Session = Depends(get_db)):

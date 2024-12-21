@@ -4,7 +4,7 @@ import api from "@/config/axiosConfig";
 import React, { useEffect, useState } from "react";
 import Column from "./Column";
 
-export default function KanbanTable({ params, sprintId }) {
+export default function KanbanTable({ sprintId, roleDetail }) {
   const [columns, setColumns] = useState([
     { id: 1, title: "Backlog", tasks: [] },
     { id: 2, title: "To-Do", tasks: [] },
@@ -19,12 +19,15 @@ export default function KanbanTable({ params, sprintId }) {
       const res = await api.get(
         `/room/view_task_by_sprint?sprint_id=${sprintId}`
       );
+      console.log(res.data);
+      
       const updatedColumns = columns.map((column) => {
         const filteredTasks = res.data.filter(
           (e) => e.task.task_type === column.id - 1
         );
         return { ...column, tasks: filteredTasks };
       });
+
       setColumns(updatedColumns);
     };
     getTask();
@@ -49,8 +52,23 @@ export default function KanbanTable({ params, sprintId }) {
         break;
       }
     }
-
     setColumns(newColumns);
+  };
+
+  const addBackLogTask = async (newTask) => {
+    const res = await api.post(`/task/create_task`, {
+      sprint_id: sprintId,
+      task_title: newTask.task_title,
+      task_description: newTask.task_description,
+    });
+
+    setColumns((prevColumns) => {
+      const newColumns = [...prevColumns];
+      newColumns[0].tasks.push(res.data);
+      console.log(prevColumns);
+
+      return newColumns;
+    });
   };
 
   return (
@@ -58,9 +76,12 @@ export default function KanbanTable({ params, sprintId }) {
       {columns.map((column) => (
         <Column
           key={column.id}
+          id={column.id}
           title={column.title}
           tasks={column.tasks}
+          roleDetail={roleDetail}
           updateTaskType={updateTaskType}
+          addBackLogTask={addBackLogTask}
         />
       ))}
     </div>
