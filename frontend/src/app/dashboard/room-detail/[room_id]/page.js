@@ -2,6 +2,7 @@
 
 import ChatRoom from "@/components/chatroom/ChatRoom";
 import SprintsComponent from "@/components/sprints/SprintsComponent";
+import UMComponent from "@/components/usermanager/UMComponent";
 import React, { useEffect, useState } from "react";
 import { UserProvider } from "@/context/UserContext";
 
@@ -14,6 +15,8 @@ export default function RoomDetailPage({ params }) {
         return <ChatRoom params={params} />;
       case 1:
         return <SprintsComponent params={params}></SprintsComponent>;
+      case 2:
+        return <UMComponent params={params}></UMComponent>;
       default:
         return <DefaultComponent />;
     }
@@ -49,7 +52,19 @@ export default function RoomDetailPage({ params }) {
                       setType(1);
                     }}
                   >
-                    Team
+                    Quản lý công việc
+                  </button>
+                  <button
+                    className={
+                      type == 2
+                        ? "rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
+                        : "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                    }
+                    onClick={() => {
+                      setType(2);
+                    }}
+                  >
+                    Danh sách thành viên
                   </button>
                 </div>
               </div>
@@ -61,3 +76,4 @@ export default function RoomDetailPage({ params }) {
     </div>
   );
 }
+  

@@ -19,7 +19,16 @@ export default function Column({
   const [newTask, setNewTask] = useState({
     task_title: "",
     task_description: "",
+    due_date: "",
+    reward_points: "",
+    assignee: "",
   });
+
+  const members = [
+    { id: 1, name: "Nguyễn Văn A" },
+    { id: 2, name: "Trần Thị B" },
+    { id: 3, name: "Lê Văn C" },
+  ];
 
   const handleOk = async () => {
     if (!newTask.task_title) {
@@ -62,22 +71,107 @@ export default function Column({
           </button>
         }
       >
-        <div className="flex flex-col space-y-4">
+        <div>
+          <label
+            htmlFor="task-title"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Tên công việc
+          </label>
           <Input
-            placeholder="Tên công việc"
+            id="task-title"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+            placeholder="Nhập tên công việc..."
             value={newTask.task_title}
             onChange={(e) =>
               setNewTask({ ...newTask, task_title: e.target.value })
             }
           />
+        </div>
+
+        {/* TextArea: Nhập mô tả công việc */}
+        <div>
+          <label
+            htmlFor="task-description"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Mô tả công việc
+          </label>
           <TextArea
+            id="task-description"
             rows={4}
-            placeholder="Mô tả công việc"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+            placeholder="Nhập mô tả công việc..."
             value={newTask.task_description}
             onChange={(e) =>
               setNewTask({ ...newTask, task_description: e.target.value })
             }
           />
+        </div>
+
+        {/* Ngày hết hạn */}
+        <div>
+          <label
+            htmlFor="due-date"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Ngày hết hạn
+          </label>
+          <Input
+            id="due-date"
+            type="date"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+            value={newTask.due_date}
+            onChange={(e) =>
+              setNewTask({ ...newTask, due_date: e.target.value })
+            }
+          />
+        </div>
+
+        {/* Điểm thưởng */}
+        <div>
+          <label
+            htmlFor="reward-points"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Điểm thưởng
+          </label>
+          <Input
+            id="reward-points"
+            type="number"
+            min="0"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+            placeholder="Nhập điểm thưởng..."
+            value={newTask.reward_points}
+            onChange={(e) =>
+              setNewTask({ ...newTask, reward_points: e.target.value })
+            }
+          />
+        </div>
+
+        {/* Người được bàn giao */}
+        <div>
+          <label
+            htmlFor="assignee"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Người được bàn giao
+          </label>
+          <select
+            id="assignee"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+            value={newTask.assignee}
+            onChange={(e) =>
+              setNewTask({ ...newTask, assignee: e.target.value })
+            }
+          >
+            <option value="">Chọn thành viên...</option>
+            {members.map((member) => (
+              <option key={member.id} value={member.id}>
+                {member.name}
+              </option>
+            ))}
+          </select>
         </div>
       </Modal>
 
